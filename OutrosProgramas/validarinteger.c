@@ -59,7 +59,7 @@ bool validar_integer(char *string, int *integer)/*Iremos utilizar os endereços 
     if (string[i] != '\0') /*Caso tenha mais algum valor armazenado na string após o armazenamento de valores no buffer, irá retornar falso*/
     {
         /*Utilizaremos o underline para representar os white space*/
-        /*EXEMPLO: _____50____10: isso é uma entrada inválida, pois temos dois integers e queremos apenas*/
+        /*EXEMPLO: _____50____10: isso é uma entrada inválida, pois temos dois integers e queremos apenas um*/
         return false;
     }
      
