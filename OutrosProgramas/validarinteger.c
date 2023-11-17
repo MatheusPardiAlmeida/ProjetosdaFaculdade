@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #define buffer_tamanho 4096 /*Definimos o tamanho da string*/
 
-bool validar_integer(char *string, int *integer)/*Iremos utilizar os endereços das variáveis string e integer para fazer a validação (pointer)*/
+bool validar_integer(char *string, int *integer)/*Iremos utilizar os endereços (pointer) das variáveis string e integer para fazer a validação*/
 {
     int i = 0; /*Variável para verificar a posição que desejamos ler*/
     int tamanho = strlen(string); /*Temos uma variável para verificar o tamanho da string*/
@@ -59,7 +59,7 @@ bool validar_integer(char *string, int *integer)/*Iremos utilizar os endereços 
     if (string[i] != '\0') /*Caso tenha mais algum valor armazenado na string após o armazenamento de valores no buffer, irá retornar falso*/
     {
         /*Utilizaremos o underline para representar os white space*/
-        /*EXEMPLO: _____50____10: isso é uma entrada inválida, pois temos dois integers e queremos apenas*/
+        /*EXEMPLO: _____50____10: isso é uma entrada inválida, pois temos dois integers e queremos apenas um*/
         return false;
     }
      
