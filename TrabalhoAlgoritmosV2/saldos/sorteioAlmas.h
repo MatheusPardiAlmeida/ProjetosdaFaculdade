@@ -1,5 +1,4 @@
 #define Clientes 10
-extern int saldoClientes[Clientes];
 
 int sorteioAlmas(int *almasClientes, int i) /*A função irá receber o valor do saldo do cliente, e a posição no array*/
 {
