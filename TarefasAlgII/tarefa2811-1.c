@@ -5,16 +5,21 @@ Compare os endereços dessas variáveis e exiba, de uma só vez, o maior endere�
 
 int main()
 {
-    int x;
-    int *y;
-    
-    if (&x > &y)
+    int x = 10;
+    float y = 20.5;
+    int *enderecoX;
+    float *enderecoY;
+
+    enderecoX = &x;
+    enderecoY = &y;
+
+    if (*(enderecoX) > *(enderecoY))
     {
-        printf("Maior endereco de memoria eh: x, (%p),(%d)", &x, x);
+        printf("Maior endereco de memoria eh: %p. Valor:%d", enderecoX, *enderecoX);
     }
     else
     {
-        printf("Maior endereco de memoria eh: y (%p), (%d)", &y, y);
+        printf("Maior endereco de memoria eh: %p. Valor:%.2f", enderecoY, *enderecoY);
     }
 
     return 0;
