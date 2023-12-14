@@ -8,7 +8,7 @@ int main()
 
     //printf("ptr2: %d", *(int*)*ptr2);
 
-    printf("ptr2: %d", *ptr2);
+    //printf("ptr2: %d\n", *(int **)*ptr2);
 
     return 0;
 }
