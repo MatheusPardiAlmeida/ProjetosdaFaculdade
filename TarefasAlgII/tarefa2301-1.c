@@ -8,6 +8,7 @@ Além disso, implemente uma função para calcular o valor total em estoque de u
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#define TAM 4 /*O tamanho do vetor*/
 
 typedef struct 
 {
@@ -17,72 +18,139 @@ typedef struct
 
 }produtos;
 
-void addProdutos(produtos mercadorias[], int *posicao) /*Não utilizei a struct como ponteiro já que estava dando erro*/
+void repreencherProdutos(produtos *mercadorias, int opcao) /*Criei uma função responsável por mudar individualmente cada parte da Struct
+tirando a necessidade de reescrever ela totalmente*/
 {
-    fflush(stdin); /*Utilzei o fflush() para ter certeza que não terei problemas no input*/
-    printf("\n");
-    printf("Digite o nome do produto: ");
-    fgets(mercadorias[*posicao].nome, 20, stdin);
-    
+    char nomeAtualizado[20];
 
-    for (int i = 0; mercadorias[*posicao].nome[i] != '\n'; i++)
+    switch (opcao)
     {
-        mercadorias[*posicao].nome[i] = toupper(mercadorias[*posicao].nome[i]); /*Para evitar erros com case sensitive, transformarei a string inteira em 
-        caracteres maiuscúlos*/
+        case 1:
+        getchar();
+        printf("\n");
+        printf("Digite o novo nome do produto: ");
+        fgets(nomeAtualizado, 20, stdin);
+       
+        strcpy(mercadorias->nome, nomeAtualizado); /*Precisamos passar o novo nome como string para a struct através do strcpy*/
+
+        break;
+
+        case 2:
+
+        do
+        {
+            printf("\n");
+            printf("Preco do produto: R$");
+            scanf("%f", &mercadorias->preco); /*Apenas sobreescrevemos os valores para o novo valor*/
+
+            if (mercadorias->preco <= 0)
+            {
+                printf("\n");
+                printf("Valor invalido, tente novamente.\n");
+            }
+        
+        } while (mercadorias->preco <= 0);
+        
+        break;
+
+        case 3:
+
+        do
+        {
+            printf("\n");
+            printf("Quantidade do produto: ");
+            scanf("%d", &mercadorias->quantidade); /*Apenas sobreescrevemos os valores para o novo valor*/
+
+            if (mercadorias->quantidade <= 0)
+            {
+                printf("Valor invalido, tente novamente.\n");
+            }
+        
+        } while (mercadorias->quantidade <= 0);
+        
+        break;
+
     }
-    
-
-    do
-    {
-        printf("\n");
-        printf("Digite o valor do produto: R$");
-        scanf("%f", &mercadorias[*posicao].preco);
-        fflush(stdin);
-
-        if (mercadorias[*posicao].preco <= 0)
-        {
-           printf("\n");
-           printf("Valor invalido, tente novamente.\n");
-           printf("\n");
-        }
-        
-
-    } while (mercadorias[*posicao].preco <= 0);
-
-    do
-    {
-        printf("\n");
-        printf("Digite a quantidade do produto: ");
-        scanf("%d", &mercadorias[*posicao].quantidade);
-        fflush(stdin);
-
-        if (mercadorias[*posicao].quantidade <= 0)
-        {
-           printf("\n");
-           printf("Valor invalido, tente novamente.\n");
-           printf("\n");
-        }
-        
-
-    } while (mercadorias[*posicao].quantidade <= 0);
-
-    (*posicao)++; /*Para incrementar a variável como ponteiro, precisamos fazer assim, caso contrário
-    iremos incrementar a posição de memória que a variável aponta*/
 
 }
 
-void atualizarProdutos(produtos mercadorias[])
+void preencherProdutos(produtos *mercadorias)
+{
+    getchar(); /*Utilizamos o getchar() para que ele armazene o \n criado pelo scanf dentro do input, que pode causar problemas 
+    ao utilizar a função fgets(), que irá receber \n como input e não irá parar o código para que o input seja lido*/
+
+    printf("Nome do produto: ");
+    fgets(mercadorias->nome, 20, stdin);
+    printf("\n");
+
+    do
+    {
+        printf("\n");
+        printf("Preco do produto: R$");
+        scanf("%f", &mercadorias->preco);
+
+        if (mercadorias->preco <= 0)
+        {
+            printf("\n");
+            printf("Valor invalido, tente novamente.\n");
+        }
+        
+    } while (mercadorias->preco <= 0);
+
+    do
+    {
+        printf("\n");
+        printf("Quantidade do produto: ");
+        scanf("%d", &mercadorias->quantidade);
+
+        if (mercadorias->quantidade <= 0)
+        {
+            printf("\n");
+            printf("Valor invalido, tente novamente.\n");
+           
+        }
+        
+    } while (mercadorias->quantidade <= 0);
+
+}
+
+void addProdutos(produtos mercadorias[], int *posicao) /*Não utilizei a struct como ponteiro já que estava dando erro*/
+{
+    if (*posicao < TAM) /*Primeiro verificamos se a posição do vetor é menor que o tamanho do vetor*/
+    {
+        preencherProdutos(&mercadorias[*posicao]);
+        (*posicao)++;
+        
+    }
+    else
+    {
+        printf("Nao ha mais espaco para produtos!!!\n"); /*Caso contrário, o vetor está cheio*/
+    }
+
+}
+
+void atualizarProdutos(produtos mercadorias[], int posicao)
 {
     int loopMenu;
     int indice;
     int opcaoAtualizar;
-    char nomeAtualizado[20];
-    float precoAtualizado;
-    int quantidadeAtualizada;
 
-    printf("\n");
-    printf("Digite o indice do produto que deseja atualizar: ");
-    scanf("%d", &indice);
+    do
+    {
+        printf("\n");
+        printf("Digite o indice do produto que deseja atualizar: ");
+        scanf("%d", &indice); /*Indice sendo a posição do vetor*/
+
+        if (indice >= posicao) /*Como a posição está sempre apontada para um vetor vazio que será preenchido futuramente, precisamos fazer
+        a verificação para saber se o indice está sendo apontado para uma posição válida do vetor*/
+        {
+            printf("Indice invalido, tente novamente.\n");
+            printf("\n");
+        }
+        
+
+    } while (indice >= posicao);
+    
 
     do
     {
@@ -96,64 +164,22 @@ void atualizarProdutos(produtos mercadorias[])
         printf("4 - Sair\n");
         printf("Digite: ");
         scanf("%d", &opcaoAtualizar);
-        getchar();
+        getchar();/*Utilizamos o getchar() para que ele armazene o \n criado pelo scanf dentro do input, que pode causar problemas 
+        ao utilizar a função fgets(), que irá receber \n como input e não irá parar o código para que o input seja lido*/
 
         switch (opcaoAtualizar)
         {
             case 1:
-            
-            fflush(stdin);
-            printf("\n");
-            printf("Digite o nome atualizado: ");
-            fgets(nomeAtualizado, 20, stdin);
-
-            for (int i = 0; nomeAtualizado[i] != '\n'; i++)
-           {
-                nomeAtualizado[i] = toupper(nomeAtualizado[i]); /*Para evitar erros com case sensitive, transformarei a string inteira em 
-                caracteres maiuscúlos*/
-           }
-
-            strcpy(mercadorias[indice].nome, nomeAtualizado);
-
+            repreencherProdutos(&mercadorias[indice], opcaoAtualizar); /*Aqui teremos a função para escolher qual parte da struct irá reescrever*/
             break;
 
             case 2:
-
-            do
-            {
-                printf("\n");
-                printf("Digite o valor atualizado: R$");
-                scanf("%f", &precoAtualizado);
-
-                if (precoAtualizado <= 0)
-                {
-                    printf("Valor invalido, tente novamente\n");
-                    printf("\n");
-                }
-                
-            } while (precoAtualizado <= 0);
-
-            mercadorias[indice].preco = precoAtualizado;
+            repreencherProdutos(&mercadorias[indice], opcaoAtualizar);
         
             break;
 
             case 3:
-
-            do
-            {
-                printf("\n");
-                printf("Digite a quantidade atualizada: ");
-                scanf("%d", &quantidadeAtualizada);
-
-                if (quantidadeAtualizada <= 0)
-                {
-                    printf("Valor invalido, tente novamente\n");
-                    printf("\n");
-                }
-                
-            } while (quantidadeAtualizada <= 0);
-
-            mercadorias[indice].quantidade = quantidadeAtualizada;
+            repreencherProdutos(&mercadorias[indice], opcaoAtualizar);
             
             break;
             
@@ -175,86 +201,44 @@ void atualizarProdutos(produtos mercadorias[])
 void excluirProdutos(produtos mercadorias[], int *posicao)
 {
     int indice;
-    char charAuxiliar[20];
-    int verificarPosicao;
 
     do
     {
         printf("\n");
-        printf("Digite o indice do produto que deseja excluir[0-4]: ");
+        printf("Digite o indice do produto que deseja excluir[0-%d]: ", TAM-1);
         scanf("%d", &indice);
 
-        if (indice < 0 || indice > 4)
+        if (indice < 0 || indice >= *posicao) /*Mesma coisa da função "atualizarProdutos"*/
         {
-            printf("\nOpcao invalida, tente novamente.");
+            printf("\nValor invalido, tente novamente.");
             printf("\n");
         }
         
-    } while (indice < 0 || indice > 4);
+    } while (indice < 0 || indice >= *posicao);
 
-    if (indice == 4)
+    for (int i = indice ; i < *posicao - 1; i++) /*Sempre vamos limitar a variável i para que ela percorra até a última posição válida do vetor, já que
+    a variável posição armazena a próxima posição que será preenchida, e não a última posição que foi escrita*/
     {
-       for (int i = 0; mercadorias[indice].nome[i] != '\n'; i++)
-       {
-            mercadorias[indice].nome[i] = NULL;
-       }
-
-        mercadorias[indice].preco = 0;
-        mercadorias[indice].quantidade = 0;
+        mercadorias[i] = mercadorias[i+1]; /*Dessa forma passamos todas as informações da struct para outro sem precisar escolher 1 por 1*/
     }
-    else
-    {
-        for (int i = indice; i < 4; i++)
-        {
-            for (int j = 0; mercadorias[indice].nome[j] != '\n'; j++)
-           {
-                mercadorias[indice].nome[j] = NULL;
-                charAuxiliar[j] = mercadorias[indice+1].nome[j];
-                mercadorias[indice+1].nome[j] = NULL;
-           }
 
-           strcpy(mercadorias[indice].nome, charAuxiliar);
-
-           mercadorias[indice].preco = mercadorias[indice+1].preco;
-           mercadorias[indice+1].preco = 0;
-
-           mercadorias[indice].quantidade = mercadorias[indice+1].quantidade;
-           mercadorias[indice+1].quantidade = 0;
-
-        }
-
-        /*O que fazer para saber qual posição a variável posicao deve retornar*/    
-    
-    }
+    (*posicao)--; /*Iremos decrementar a posição em 1*/
     
 }
 
-void visualizarProdutos(produtos mercardorias[])
+void visualizarProdutos(produtos mercardorias[], int posicao)
 {
-    int indice;
 
-    do
+    for (int i = 0; i < posicao; i++)
     {
         printf("\n");
-        printf("Digite o indice do produto que deseja ver[0-4]: ");
-        scanf("%d", &indice);
-
-        if (indice < 0 || indice > 4)
-        {
-            printf("\nOpcao invalida, tente novamente.");
-            printf("\n");
-        }
-        
-    } while (indice < 0 || indice > 4);
-
-    printf("\n");
-    printf("Nome: %s", mercardorias[indice].nome);
-    printf("\n");
-    printf("Preco: %.2f", mercardorias[indice].preco);
-    printf("\n");
-    printf("Quantidade: %d", mercardorias[indice].quantidade);
-    printf("\n");
-
+        printf("\nNome: %s", mercardorias[i].nome);
+        printf("\n");
+        printf("\nPreco: %.2f", mercardorias[i].preco);
+        printf("\n");
+        printf("\nQuantidade: %d", mercardorias[i].quantidade);
+        printf("\n");
+    }
 
 }
 
@@ -262,7 +246,7 @@ int main()
 {   
     int opcao;
     int posicao = 0;
-    produtos mercadorias[5];
+    produtos mercadorias[TAM];
 
     do
     {
@@ -276,26 +260,15 @@ int main()
         printf("\n");
         printf("Digite: ");
         scanf("%d", &opcao);
-        getchar(); /*Utilizamos o getchar() para que ele armazene o \n criado pelo scanf dentro do input, que pode causar problemas 
-        ao utilizar a função fgets(), que irá receber \n como input e não irá parar o código para que o input seja lido*/
 
         switch (opcao)
        {
             case 1:
-            if (posicao > 4)
-            {
-                printf("Numero maximo de produtos atingido.\n");
-                printf("\n");
-            }
-            else
-            {
-                addProdutos(mercadorias, &posicao);
-            }
-            
+            addProdutos(mercadorias, &posicao);
             break;
 
             case 2:
-            atualizarProdutos(mercadorias);
+            atualizarProdutos(mercadorias, posicao);
             break;
 
             case 3:
@@ -303,7 +276,7 @@ int main()
             break;
 
             case 4:
-            visualizarProdutos(mercadorias);
+            visualizarProdutos(mercadorias, posicao);
             break;
 
             case 5:
