@@ -35,11 +35,10 @@ void interruptor(int *endLampada,void (*l)(), void (*d)())
 
 int main()
 {
-    int lampada = 1;
-    char auxiliar[10];
+    int lampada = 0;
     
     FILE *arquivo;
-    arquivo = fopen("lampada.txt", "w+");
+    arquivo = fopen("lampada.txt", "a+");
     
     if (!arquivo)
     {
@@ -47,15 +46,22 @@ int main()
         return 1;
     }
 
-    /*Não consigo fazer o programa ler o arquivo*/
+    int estadoLampada;
+
+    while (fscanf(arquivo, "%d", &estadoLampada) != EOF)
+    {
+        lampada = estadoLampada;
+    }
     
-    printf("\n%d", lampada);
+    printf("\nEstado lampada apos leitura: %d", lampada);
     
     interruptor(&lampada, ligarLampada, desligarLampada);
+    interruptor(&lampada, ligarLampada, desligarLampada);
+    interruptor(&lampada, ligarLampada, desligarLampada);
 
-    printf("\n%d", lampada);
+    printf("\nUltimo valor lampada: %d", lampada);
     
-    fprintf(arquivo, "%d", lampada);
+    fprintf(arquivo, "%d\n", lampada);
 
     fclose(arquivo);
 
