@@ -34,7 +34,7 @@ void inserirDados(VEICULO *vetor, int *pos)
     {
         printf("\n");
         printf("\nO arquivo nao foi aberto!");
-        return 0;
+        return;
     }
     
     printf("\n");
@@ -60,7 +60,7 @@ void inserirDados(VEICULO *vetor, int *pos)
     fprintf(arquivo, "Modelo: %s", vetor->modelo);
     fprintf(arquivo, "Marca: %s", vetor->marca);
     fprintf(arquivo, "Cor: %s", vetor->cor);
-    fprintf(arquivo, "Ano de Fabricacao: %d", vetor->anoFabri);
+    fprintf(arquivo, "Ano de Fabricacao: %d\n", vetor->anoFabri);
     fprintf(arquivo, "Preco: %.2f\n", vetor->preco);
 
     fclose(arquivo);
@@ -76,34 +76,32 @@ void registrarVeiculo(VEICULO vetor[], int *pos)
     }
     else
     {
-        inserirDados(&vetor[*pos], &pos);
+        inserirDados(&vetor[*pos], pos);
         (*pos)++;
     }
 
 }
 
-void imprimirRegistro(VEICULO vetor[])
+void imprimirRegistro()
 {
+    char texto[100];
+
     FILE *arquivo;
-    arquivo = fopen("registroveiculo.txt", "r");
+    arquivo = fopen("registroveiculos.txt", "r");
 
     if (!arquivo)
     {
         printf("\n");
         printf("\nO arquivo nao foi aberto!");
-        return 0;
+        return;
     }
 
-    while (fgets)
+    while (fgets(texto, 100, arquivo) != NULL)
     {
-        /* code */
+        printf("\n%s", texto);        
     }
-    
-    
 
-
-
-
+    fclose(arquivo);
 
 }
 
@@ -134,11 +132,11 @@ int main()
             break;
             
             case 2:
-            imprimirRegistro(vetor);
+            imprimirRegistro();
             break;
 
             case 3:
-            
+            /*Nem ideia de como fazer isso*/
             break;
 
             case 4:
