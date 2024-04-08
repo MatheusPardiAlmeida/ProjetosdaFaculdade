@@ -8,47 +8,42 @@ Implemente um programa que funciona como o descrito acima.
 Considere a implementação DINÂMICA da estrutura.*/
 #include <stdlib.h>
 #include <stdio.h>
+#define TAM 4
 
-typedef struct 
-{
-    char musica[25];
-    
-} REGISTRO;
+typedef struct
+ {
+    char musica[30];
+ }REGISTRO;
 
-typedef struct item
-{
+ typedef struct 
+ {
     REGISTRO r;
-    struct item* prox;
-    
-} ITEM;
-
-typedef struct 
-{
-    ITEM *inicio;
-    ITEM *fim;
+    struct item *ant;
+ }ITEM;
+ 
+ typedef struct
+ {
+    ITEM *topo;
     int quantidade;
+ }PILHA;
 
-} FILA;
+ typedef struct
+ {
+    ITEM *topo;
+    int quantidade;
+ }PILHAAUX;
 
-typedef struct 
+void iniciarPilha(PILHA *p)
 {
-    ITEM *inicio;
-    ITEM *fim;
-
-} FILAAUX;
-
-void iniciarFila(FILA *f)
-{
-    f->inicio = NULL;
-    f->fim = NULL;
-    f->quantidade = 0;
+    p->topo = NULL;
+    p->quantidade = 0;
 
 }
 
-void iniciarFilaAux(FILAAUX *faux)
+void iniciarPilhaAux(PILHAAUX *paux)
 {
-    faux->inicio = NULL;
-    faux->fim = NULL;
+    paux->topo = NULL;
+    paux->quantidade = 0;
 
 }
 
@@ -59,68 +54,74 @@ ITEM* criarItem(REGISTRO r)
     if (novo)
     {
         novo->r = r;
-        novo->prox = NULL;
+        novo->ant = NULL;
     }
 
     return novo;
 }
 
-void inserir(FILA *f, REGISTRO r)
+void inserir(PILHA *p, PILHAAUX *paux, REGISTRO r)
 {
-    ITEM *novo = criarItem(r);
+    ITEM *novo = criarItem(r); /*Inserir na pilha normal*/
 
-    if (novo)
-    {
-        if (!f->inicio)
-        {
-            f->inicio = novo;
-        }
-        else if (f->fim)
-        {
-            f->fim->prox = novo;
-        }
+    novo->ant = p->topo;
+    p->topo = novo;
 
-        f->fim = novo;
-        f->quantidade++;
-        
-    }
+    ITEM *novoaux = criarItem(r); /*Inserir na pilha auxiliar para a operação de refazer*/
+ 
+    novoaux->ant = paux->topo;
+    paux->topo = novoaux;
     
 }
 
-void imprimirFila(FILA *f)
+void imprimirFila(PILHA *p)
 {
-    ITEM *posicao = f->inicio;
 
-    while (posicao)
+    while (p->topo != NULL)
     {
-        printf("Nome musica: %s\n", posicao->r.musica);
-        posicao = posicao->prox;
+        printf("\n");
+        printf("\nMusica: %s", p->topo->r.musica);
+        p->topo = p->topo->ant;
     }
 
 }
 
-void desfazer(FILA *f, FILAAUX *faux)
+void desfazer(PILHA *p, PILHAAUX *paux){k
+
+    if(paux->topo = NULL)
+    {
+        printf("\n");
+        printf("\nNada para desfazer!");
+        return;
+    }
+
+    ITEM *musicaDesfazer = p->topo;
+    p->topo = p->topo->ant;
+
+    ITEM *refazerMusica = criarItem(musicaDesfazer->r);
+    refazerMusica->ant = paux->topo;
+    paux->topo = refazerMusica;
+
+    free(musicaDesfazer);
+}
+
+void refazer(PILHA *p, PILHAAUX *paux)
 {
-    if (f->inicio)
-    {
-        faux->inicio = f->inicio;
-        faux->fim = f->fim;
-        faux->inicio->prox = f->inicio->prox;
-
-        ITEM *excluir = f->inicio;
-        f->inicio = f->inicio->prox;
-        free(excluir);
-        f->quantidade--;
-
-        printf("\n");
-        printf("\nA musica foi desfeita com sucesso.");
-    }
-    else
+    if(paux->topo = NULL)
     {
         printf("\n");
-        printf("\nNao tem nada na fila.");
+        printf("\nNada para desfazer!");
+        return;
     }
 
+    ITEM *refazerMusica = paux->topo;
+    paux->topo = paux->topo->ant;
+
+    ITEM *desfazerMusica = criarItem(refazerMusica->r);
+    desfazerMusica->ant = p->topo;
+    p->topo = desfazerMusica;
+
+    free(refazerMusica);
 }
 
 
@@ -128,14 +129,14 @@ int main()
 {
     int opcoes;
 
-    FILA f;
-    FILAAUX faux;
-    iniciarFila(&f);
-    iniciarFilaAux(&faux);
-    inserir(&f, (REGISTRO){"Mechanized Memories"});
-    inserir(&f, (REGISTRO){"Apex in Circle"});
-    inserir(&f, (REGISTRO){"Monkey Likes Daddy"});
-    inserir(&f, (REGISTRO){"Steel Haze"});
+    PILHA p;
+    PILHAAUX paux;
+    iniciarPilha(&p);
+    iniciarPilhaAux(&paux);
+    inserir(&p, &paux, (REGISTRO){"Mechanized Memories"});
+    inserir(&p, &paux, (REGISTRO){"Apex in Circle"});
+    inserir(&p, &paux, (REGISTRO){"Monkey Likes Daddy"});
+    inserir(&p, &paux, (REGISTRO){"Steel Haze"});
     
   
   do
@@ -154,15 +155,15 @@ int main()
     switch (opcoes)
     {
         case 1:
-        desfazer(&f, &faux);
+        desfazer(&p, &paux);
         break;
 
         case 2:
-        /* code */
+        refazer(&p, &paux);
         break;
 
         case 3:
-        imprimirFila(&f);
+        imprimirFila(&p);
         break;
 
         case 4:
