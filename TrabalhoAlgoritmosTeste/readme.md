@@ -1,1 +1,0 @@
-Versão modificada do trabalho final de Algoritmos, com algumas modificações para o meu gosto
