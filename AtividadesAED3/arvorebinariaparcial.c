@@ -39,7 +39,7 @@ void inserirElemento(Node **raiz, Node **atual){
     scanf("%d", &valor);
     getchar();
 
-    if (valor < 0 || isdigit(valor)) { //Verifica se o valor é negativo ou não é um número inteiro
+    if (valor < 0 || isdigit(valor) == 0) { //Verifica se o valor é negativo ou não é um número inteiro
         printf("\nValor invalido, digite novamente: ");
         scanf("%d", &valor);
         getchar();
