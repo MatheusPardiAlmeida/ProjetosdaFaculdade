@@ -421,7 +421,7 @@ void buscaLargura(Node *atual, int valor) {
         // A fila ficará vazia já que não foi enfileirado os filhos da raiz
         // Porém quando for para enfileirar os filhos do node atual, a fila não ficará mais vazia
         // Assim teremos [1] -> [2,3] -> [4,5,6,7] e assim por diante, até que todos os nodes da árvore sejam lidos e depois desenfileirados 
-        printf("\nValor atual da busca: %d", tempAtual->valor);
+        printf("\nValor atual da busca: %d\n", tempAtual->valor);
 
         if (tempAtual->valor == valor) { // Se o valor do node temporário for igual ao valor buscado, imprime o valor e retorna
             printf("\nO numero buscado se encontra na arvore: %d\n", tempAtual->valor);
