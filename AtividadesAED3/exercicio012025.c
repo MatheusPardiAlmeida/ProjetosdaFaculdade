@@ -3,6 +3,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <stdbool.h>
+
+typedef struct item{
+    Node *valor;
+    struct item* prox;
+} Item;
+
+typedef struct fila{
+    Item* inicio;
+    Item* fim;
+} Fila;
 
 typedef struct Node{
     int valor;
@@ -263,6 +274,7 @@ void removerElemento(Node **atual, Node **raiz) {  // Utilizamos ponteiro duplo 
                 printf("\nPressione qualquer tecla para continuar...");
                 getchar();
                 system("cls");
+                i = 1; // A variável de controle do loop é alterada para 1, fazendo com que o loop não continue
                 return;
 
                 case 2:
@@ -272,6 +284,7 @@ void removerElemento(Node **atual, Node **raiz) {  // Utilizamos ponteiro duplo 
                 printf("\nPressione qualquer tecla para continuar...");
                 getchar();
                 system("cls");
+                i = 1; // A variável de controle do loop é alterada para 1, fazendo com que o loop não continue
                 return;
 
                 case 3:
@@ -282,6 +295,7 @@ void removerElemento(Node **atual, Node **raiz) {  // Utilizamos ponteiro duplo 
                 printf("\nPressione qualquer tecla para continuar...");
                 getchar();
                 system("cls");
+                i = 1; // A variável de controle do loop é alterada para 1, fazendo com que o loop não continue
                 return;
         
                 default:
@@ -290,11 +304,13 @@ void removerElemento(Node **atual, Node **raiz) {  // Utilizamos ponteiro duplo 
                 getchar();
                 break;
             }
-        }    
+        }
+    return;
 }
 
 void listarOrdem(Node *atual, int nivel) {
-    if (atual == NULL) {
+    if (atual == NULL){
+        printf("#\n");
         return; // Caso o valor atual seja nulo, a função termina e retorna para o nível anterior
     }
 
@@ -329,6 +345,104 @@ void listarElementos(Node *raiz){
     return;
 }
 
+int buscaProfundidade(Node *atual, int valor){
+
+    if (atual == NULL){
+        return 0;
+    }
+
+    if (atual->valor == valor){
+        printf("\n");
+        printf("\nO numero buscado se encontra na arvore: %d\n", atual->valor);
+        printf("\nPressione qualquer tecla para continuar...");
+        getchar();
+        system("cls");
+        return 1;
+    }
+    
+    else{
+        printf("\nValor atual: %d\n", atual->valor);
+    }
+
+    if(buscaProfundidade(atual->left, valor)){ // Como a função é recursiva do tipo int, caso o valor seja encontrado, irá retornar 1 até não ter mais chamadas recursivas
+        return 1; // Se o valor for encontrado na subárvore esquerda, retorna 1
+    }
+    if(buscaProfundidade(atual->right, valor)){ // Caso o valor retornado seja 0, a função irá continuar a busca até não ter mais chamadas recursivas
+        return 1; // Se o valor for encontrado na subárvore direita, retorna 1
+    }
+
+    return 0; // Após acabar todas as chamadas recursivas, se o valor não for encontrado, retorna 0
+}
+void inicializarFila(Fila *fila) {
+    fila->inicio = NULL;
+    fila->fim = NULL;
+}
+
+void buscaLargura(Node *atual, int valor) {
+
+    Fila fila;
+    inicializarFila(&fila);
+
+    
+
+
+}
+
+void buscarElementoArvore(Node *raiz){
+
+    if (raiz == NULL) { // Caso a árvore seja vazia, retorna a função principal
+        printf("\nA arvore esta vazia.");
+        printf("\nPressione qualquer tecla para continuar...");
+        getchar();
+        system("cls");
+        return;
+    }
+    
+    int valor;
+    int escolha;
+    int resultadoDFS;
+
+    printf("\nDigite o valor que deseja encontar na arvore: ");
+    scanf("%d", &valor);
+    getchar();
+
+    if (valor < 0 || isdigit(valor)) { //Verifica se o valor é negativo ou não é um número inteiro
+        printf("\nValor invalido, digite novamente: ");
+        scanf("%d", &valor);
+        getchar();
+    }
+
+    printf("\nDeseja fazer busca por profundidade ou largura?");
+    printf("\n1 - Profundidade");
+    printf("\n2 - Largura");
+    printf("\nDigite sua escolha: ");
+    scanf("%d", &escolha);
+    getchar();
+
+    switch (escolha)
+    {
+    case 1:
+        resultadoDFS = buscaProfundidade(raiz, valor);
+        break;
+    case 2:
+        buscaLargura(raiz, valor);
+        break;
+    default:
+        printf("\nOpcao invalida, tente novamente.\n");
+        break;
+    }
+
+
+    if (resultadoDFS == 0){ // Se a função retornar 0, significa que o valor não foi encontrado
+        printf("\n");
+        printf("\nO numero buscado nao se encontra na arvore.\n");
+        printf("\nPressione qualquer tecla para continuar...");
+        getchar();
+    }
+
+    return;
+}
+
 int main() {
 
     Node *raiz = NULL;
@@ -357,7 +471,7 @@ int main() {
         case 1:
             system("cls");
             inserirElemento(&raiz, &atual);
-            break;
+        break;
         case 2:
 
             system("cls");
@@ -388,33 +502,35 @@ int main() {
                 printf("\nPressione qualquer tecla para continuar...");
                 getchar();
                 system("cls");
-            break;
+        break;
         case 3:
             system("cls");
             percorrerArvore(&atual, raiz);
-            break;
+        break;
         case 4:
             system("cls");
             removerElemento(&atual, &raiz);
-            break;
+        break;
         case 5:
             system("cls");
-            //buscarElementoArvore();
-            break;
+            buscarElementoArvore(raiz);
+            system("cls");
+        break;
+
         case 6:
             system("cls");
             listarElementos(raiz);
-            break;
+        break;
         case 0:
             printf("\nFinalizando o programa...\n");
             printf("Pressione qualquer tecla para sair.\n");
             getchar();
             controleMenu = 1;
-            break;
+        break;
 
         default:
             printf("Opcao invalida. Tente novamente.\n");
-            break;
+        break;
         }
 
     } while (controleMenu == 0);
