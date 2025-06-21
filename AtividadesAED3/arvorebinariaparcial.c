@@ -106,7 +106,8 @@ void inserirElemento(Node **raiz, Node **atual){
             }
         }
     }
-    
+
+    free(ponto);
     system("cls");
     return;
 }
