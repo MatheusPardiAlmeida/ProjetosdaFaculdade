@@ -2,7 +2,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
+#include <ctype.h> 
+#include <stdbool.h>
 
 typedef struct Node{
     int valor;
@@ -30,22 +31,42 @@ Node* criarNode(int valor){
     return ponto;
 }
 
+bool verificarInput(char* input){
+    for (int i = 0; input[i] != '\0'; i++) {
+        if (isdigit(input[i])== 0){
+            return false; // Retorna falso se encontrar um caractere não numérico
+        }
+    }
+    return true; // Retorna verdadeiro se todos os caracteres forem numéricos
+}
+
 void inserirElemento(Node **raiz, Node **atual){
  // Utilizamos ponteiro duplo caso a função precise alterar as variáveis.
     int escolha;
-    int valor;
+    int valorConvertido;
+    char valor[50];
 
     printf("Digite o valor a ser inserido na arvore: ");
-    scanf("%d", &valor);
+    scanf("%s", &valor);
     getchar();
 
-    if (valor < 0 || isdigit(valor) == 0) { //Verifica se o valor é negativo ou não é um número inteiro
+    if (!verificarInput(valor)) { //Verifica se o valor é um número inteiro
         printf("\nValor invalido, digite novamente: ");
-        scanf("%d", &valor);
+        scanf("%s", &valor);
         getchar();
     }
+    else{
+        valorConvertido = atoi(valor); // Converte a string para inteiro
 
-    Node *ponto = criarNode(valor); //Cria o node
+        if (valorConvertido < 0) //Verifica se o valor é negativo 
+        {
+            printf("\nValor menor que zero, digite novamente: ");
+            scanf("%s", &valor);
+            getchar();
+        }
+    }
+
+    Node *ponto = criarNode(valorConvertido); //Cria o node
 
     if (*raiz == NULL){ //Caso o node seja o primeiro, será a raiz
         *raiz = ponto; // Atribui o node criado como raiz
@@ -106,7 +127,8 @@ void inserirElemento(Node **raiz, Node **atual){
             }
         }
     }
-
+    
+    free(ponto);
     system("cls");
     return;
 }
@@ -251,9 +273,7 @@ void removerElemento(Node **atual, Node **raiz) {  // Utilizamos ponteiro duplo 
             }
             printf("\nDigite sua escolha: ");
             scanf("%d", &escolha);
-            getchar();
-            
-            
+            getchar();      
         
             switch (escolha)
             {
@@ -450,18 +470,22 @@ void buscarElementoArvore(Node *raiz){
         return;
     }
     
-    int valor;
+    char valor[50]; 
+    int valorConvertido;
     int escolha;
     int resultadoDFS;
 
     printf("\nDigite o valor que deseja encontar na arvore: ");
-    scanf("%d", &valor);
+    scanf("%s", &valor);
     getchar();
 
-    if (valor < 0 || isdigit(valor)) { //Verifica se o valor é negativo ou não é um número inteiro
+    if (!verificarInput(valor)) { //Verifica se o valor é um número inteiro
         printf("\nValor invalido, digite novamente: ");
-        scanf("%d", &valor);
+        scanf("%s", &valor);
         getchar();
+    }
+    else{
+        valorConvertido = atoi(valor); // Converte a string para inteiro
     }
 
     printf("\nDeseja fazer busca por profundidade ou largura?");
@@ -474,24 +498,22 @@ void buscarElementoArvore(Node *raiz){
     switch (escolha)
     {
     case 1:
-        resultadoDFS = buscaProfundidade(raiz, valor);
+        resultadoDFS = buscaProfundidade(raiz, valorConvertido);
+        if (resultadoDFS == 0){ // Se a função retornar 0, significa que o valor não foi encontrado
+        printf("\n");
+        printf("\nO numero buscado nao se encontra na arvore.\n");
+        printf("\nPressione qualquer tecla para continuar...");
+        getchar();
+        }
         break;
     case 2:
-        buscaLargura(raiz, valor);
+        buscaLargura(raiz, valorConvertido);
         break;
     default:
         printf("\nOpcao invalida, tente novamente.\n");
         break;
     }
-
-
-    if (resultadoDFS == 0){ // Se a função retornar 0, significa que o valor não foi encontrado
-        printf("\n");
-        printf("\nO numero buscado nao se encontra na arvore.\n");
-        printf("\nPressione qualquer tecla para continuar...");
-        getchar();
-    }
-
+    system("cls");
     return;
 }
 
