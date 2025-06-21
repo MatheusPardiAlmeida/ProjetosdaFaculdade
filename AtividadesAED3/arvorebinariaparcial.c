@@ -143,15 +143,6 @@ void percorrerArvore(Node **atual, Node *raiz) { // Como a função só altera o
         system("cls");
         return;
     }
-    // else if (*atual == NULL && raiz != NULL) // Caso o ponteiro do valor atual esteja apontando para um endereço NULL mas a raiz não, então retornamos o atual para a raiz
-    //{
-        //*atual = raiz;
-        //printf("\nO elemento atual se encontra vazio, retornando a raiz.");
-        //printf("\nPressione qualquer tecla para continuar...");
-        //getchar();
-        //system("cls");
-        //return;
-    //}
 
     int opcao;
 
